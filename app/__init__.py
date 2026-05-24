@@ -22,7 +22,8 @@ def create_app(db_path=":memory:"):
 
     # Blueprints registered as each module is implemented (TDD, one at a time)
     for modname, attr in [("categories", "bp"), ("items", "bp"),
-                          ("customers", "bp"), ("orders", "bp"), ("web", "bp")]:
+                          ("customers", "bp"), ("orders", "bp"),
+                          ("admin", "bp"), ("web", "bp")]:
         try:
             mod = __import__(f"app.{modname}", fromlist=[attr])
             app.register_blueprint(getattr(mod, attr))

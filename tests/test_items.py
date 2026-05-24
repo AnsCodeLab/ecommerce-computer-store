@@ -91,3 +91,38 @@ def test_delete_item(client):
     response = client.get(f'/api/items/{item_id}')
     assert response.status_code == 404
 
+
+
+def _make_item(client, stock=4, price=1599.99):
+    cid = client.post('/api/categories', json={'name': 'Gaming'}).get_json()['id']
+    return client.post('/api/items', json={
+        'name': 'RTX 4090', 'description': 'GPU',
+        'price': price, 'stock': stock, 'category_id': cid,
+    }).get_json()['id']
+
+
+def test_patch_item_updates_stock(client):
+    iid = _make_item(client, stock=4)
+    resp = client.patch(f'/api/items/{iid}', json={'stock': 25})
+    assert resp.status_code == 200
+    assert resp.get_json()['stock'] == 25
+    # persisted
+    assert client.get(f'/api/items/{iid}').get_json()['stock'] == 25
+
+
+def test_patch_item_partial_keeps_other_fields(client):
+    iid = _make_item(client, stock=4, price=1599.99)
+    client.patch(f'/api/items/{iid}', json={'price': 1399.00})
+    data = client.get(f'/api/items/{iid}').get_json()
+    assert data['price'] == 1399.00
+    assert data['stock'] == 4          # untouched
+    assert data['name'] == 'RTX 4090'  # untouched
+
+
+def test_patch_missing_item_404(client):
+    assert client.patch('/api/items/999', json={'stock': 1}).status_code == 404
+
+
+def test_patch_no_valid_fields_400(client):
+    iid = _make_item(client)
+    assert client.patch(f'/api/items/{iid}', json={'bogus': 1}).status_code == 400

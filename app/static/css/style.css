@@ -395,3 +395,19 @@ form input {
 @media (max-width: 768px) {
   .checkout-layout { grid-template-columns: 1fr; }
 }
+
+/* ---- admin / stock management ---- */
+table.table { width: 100%; border-collapse: collapse; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 2rem; }
+table.table th, table.table td { padding: .75rem 1rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
+table.table th { background: var(--bg); font-size: .85rem; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); }
+table.table tr:last-child td { border-bottom: none; }
+table.table form { display: inline-flex; gap: .5rem; align-items: center; margin: 0; }
+table.table input[type="number"] { width: 6.5rem; padding: .4rem .5rem; border: 1px solid var(--border);
+  border-radius: 8px; margin: 0; }
+.admin-add { background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 1.5rem; max-width: 480px; }
+.form-group { margin-bottom: .9rem; }
+.form-group label { display: block; font-weight: 600; margin-bottom: .25rem; }
+.form-group input, .form-group select { width: 100%; padding: .55rem .6rem; border: 1px solid var(--border);
+  border-radius: 8px; }

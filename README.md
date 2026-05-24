@@ -15,7 +15,8 @@ stylesheet (`app/static/css/style.css`, no external CDNs — works offline on a 
 - **Customers:** create / list / get / delete.
 - **Orders & checkout:** validates stock, creates an order with line items, decrements stock, computes totals.
 - **Web storefront:** browse items by category, item detail pages, session-based cart, and checkout that places a real order.
-- **SQLite** storage, **pytest** test suite (30 tests), TDD throughout.
+- **Admin / stock management:** `/admin` page to edit stock & price inline, add products, and delete them — backed by a `PATCH /api/items/<id>` endpoint.
+- **SQLite** storage, **pytest** test suite (38 tests), TDD throughout.
 
 ## Layout
 
@@ -64,6 +65,7 @@ pytest -q              # 30 passed
 | GET/DELETE | `/api/categories/<id>` | — | get (404 if missing) / delete (204) |
 | GET/POST | `/api/items` | `{name,description,price,stock,category_id}` | `description`/`category_id` optional |
 | GET/DELETE | `/api/items/<id>` | — | |
+| PATCH | `/api/items/<id>` | any of `{name,description,price,stock,category_id}` | partial update; 404 if missing, 400 if no valid field |
 | GET/POST | `/api/customers` | `{name,email}` | |
 | GET/DELETE | `/api/customers/<id>` | — | |
 | POST | `/api/checkout` | `{customer_id, items:[{item_id,quantity}]}` | validates stock, returns order + total (201) |

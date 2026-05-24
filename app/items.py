@@ -45,3 +45,24 @@ def delete_item(iid):
         abort(404)
     return '', 204
 
+@bp.route('/<int:iid>', methods=['PATCH'])
+def update_item(iid):
+    data = request.get_json()
+    allowed_fields = {'name', 'description', 'price', 'stock', 'category_id'}
+    fields = {k: v for k, v in data.items() if k in allowed_fields}
+    
+    if not fields:
+        abort(400)
+    
+    set_clause = ', '.join([f'{k} = ?' for k in fields])
+    values = list(fields.values())
+    
+    db = get_db()
+    cur = db.execute(f'UPDATE items SET {set_clause} WHERE id = ?', values + [iid])
+    db.commit()
+    
+    if cur.rowcount == 0:
+        abort(404)
+    
+    cur = db.execute('SELECT * FROM items WHERE id = ?', (iid,))
+    return dict(cur.fetchone()), 200

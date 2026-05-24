@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Admin · Stock Management</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Category</th>
+      <th>Stock</th>
+      <th>Price</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in items %}
+    <tr>
+      <td>{{ item.name }}</td>
+      <td>{{ item.category }}</td>
+      <td>
+        <form method="POST" action="/admin/items/{{ item.id }}">
+          <input type="number" name="stock" value="{{ item.stock }}" min="0" required>
+          <input type="number" name="price" step="0.01" value="{{ item.price }}" required>
+          <button type="submit" class="btn">Save</button>
+        </form>
+      </td>
+      <td>
+        <form method="POST" action="/admin/items/{{ item.id }}/delete">
+          <button type="submit" class="btn ghost">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<h2>Add Product</h2>
+<form class="admin-add" method="POST" action="/admin/items">
+  <div class="form-group">
+    <label>Name</label>
+    <input type="text" name="name" required>
+  </div>
+  <div class="form-group">
+    <label>Description</label>
+    <input type="text" name="description" required>
+  </div>
+  <div class="form-group">
+    <label>Price</label>
+    <input type="number" name="price" step="0.01" required>
+  </div>
+  <div class="form-group">
+    <label>Stock</label>
+    <input type="number" name="stock" required>
+  </div>
+  <div class="form-group">
+    <label>Category</label>
+    <select name="category_id" required>
+      {% for category in categories %}
+      <option value="{{ category.id }}">{{ category.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button type="submit" class="btn accent">Add Product</button>
+</form>
+{% endblock %}
