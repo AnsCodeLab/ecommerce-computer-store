@@ -19,7 +19,7 @@ def checkout():
     for item in items:
         item_id = item.get("item_id")
         quantity = item.get("quantity")
-        if not item_id or not quantity:
+        if not item_id or not isinstance(quantity, int) or quantity <= 0:
             abort(400)
         row = db.execute("SELECT price, stock FROM items WHERE id = ?", (item_id,)).fetchone()
         if not row:

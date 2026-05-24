@@ -125,3 +125,11 @@ def test_get_order(client):
     data = response.get_json()
     assert "items" in data
     assert "total" in data
+
+def test_checkout_rejects_negative_quantity(client):
+    cat = client.post("/api/categories", json={"name": "C"}).get_json()
+    item = client.post("/api/items", json={"name": "X", "price": 10.0, "stock": 5, "category_id": cat["id"]}).get_json()
+    cust = client.post("/api/customers", json={"name": "Z", "email": "z@x.com"}).get_json()
+    resp = client.post("/api/checkout", json={"customer_id": cust["id"],
+                       "items": [{"item_id": item["id"], "quantity": -3}]})
+    assert resp.status_code == 400
