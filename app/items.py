@@ -22,10 +22,10 @@ def get_item(iid):
 def create_item():
     data = request.get_json()
     name = data['name']
-    description = data['description']
+    description = data.get('description')
     price = data['price']
-    stock = data['stock']
-    category_id = data['category_id']
+    stock = data.get('stock', 0)
+    category_id = data.get('category_id')
     
     db = get_db()
     cur = db.execute('INSERT INTO items (name, description, price, stock, category_id) VALUES (?, ?, ?, ?, ?)',
