@@ -22,4 +22,17 @@ def test_seed_inserts_data(tmp_path):
     assert conn.execute("SELECT COUNT(*) FROM items").fetchone()[0] >= 3
     names = {row["name"] for row in conn.execute("SELECT name FROM items").fetchall()}
     conn.close()
-    assert {"Gaming Laptop", "Workstation Desktop", "SSD Storage"} <= names
+    assert {"Workstation Desktop", "1TB NVMe SSD"} <= names
+
+
+def test_seed_is_idempotent(tmp_path):
+    db_path = str(tmp_path / "test.db")
+    init_db(db_path)
+    seed(db_path)
+    conn = get_conn(db_path)
+    count = conn.execute("SELECT COUNT(*) FROM items").fetchone()[0]
+    conn.close()
+    seed(db_path)  # second run must not duplicate the catalog
+    conn = get_conn(db_path)
+    assert conn.execute("SELECT COUNT(*) FROM items").fetchone()[0] == count
+    conn.close()

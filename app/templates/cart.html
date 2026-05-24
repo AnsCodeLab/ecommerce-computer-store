@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Your Cart | CompuStore{% endblock %}
+{% block content %}
+<h1>Your Cart</h1>
+{% if items %}
+  <table class="cart-table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Qty</th>
+        <th>Subtotal</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td>{{ item.name }}</td>
+        <td>${{ '%.2f'|format(item.price) }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>${{ '%.2f'|format(item.line_total) }}</td>
+        <td>
+          <form action="/cart/remove" method="POST">
+            <input type="hidden" name="item_id" value="{{ item.id }}">
+            <button type="submit" class="btn ghost">Remove</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="cart-total">
+    <p>Total: <strong>${{ '%.2f'|format(total) }}</strong></p>
+  </div>
+  <div class="cart-actions">
+    <a href="/" class="btn ghost">Continue shopping</a>
+    <a href="/checkout" class="btn accent">Proceed to checkout</a>
+  </div>
+{% else %}
+  <div class="empty">
+    <div class="empty-icon">🛒</div>
+    <p>Your cart is empty.</p>
+    <a href="/" class="btn accent">Browse store</a>
+  </div>
+{% endif %}
+{% endblock %}

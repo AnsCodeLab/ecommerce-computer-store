@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Checkout | CompuStore{% endblock %}
+{% block content %}
+<h1>Checkout</h1>
+<div class="checkout-layout">
+  <form class="checkout-form" method="POST" action="/checkout">
+    <h3>Your details</h3>
+    <label for="name">Full name</label>
+    <input type="text" id="name" name="name" placeholder="Jane Doe" required>
+    <label for="email">Email address</label>
+    <input type="email" id="email" name="email" placeholder="jane@example.com" required>
+    <button type="submit" class="btn accent block">Place order</button>
+    <p class="crumbs"><a href="/cart">← Back to cart</a></p>
+  </form>
+  <aside class="summary">
+    <h3>Order summary</h3>
+    <ul>
+      {% for item in items %}
+      <li><span>{{ item.name }} × {{ item.quantity }}</span> <span>${{ '%.2f'|format(item.line_total) }}</span></li>
+      {% endfor %}
+    </ul>
+    <p class="cart-total">Total: <strong>${{ '%.2f'|format(total) }}</strong></p>
+  </aside>
+</div>
+{% endblock %}

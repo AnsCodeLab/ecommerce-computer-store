@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Home | CompuStore{% endblock %}
+{% block content %}
+<section class="hero">
+    <h1>Build Your Dream Setup</h1>
+    <p>Laptops, desktops, and components — curated for performance, priced to move.</p>
+    <a href="#catalog" class="btn block">Shop the catalog</a>
+</section>
+
+<div id="catalog">
+{% for category in categories %}
+    <section class="category-section">
+        <h2>{{ category.name }}</h2>
+        <div class="product-grid">
+            {% for item in category.products %}
+            <div class="card">
+                <a class="thumb" href="/item/{{ item.id }}" aria-label="View {{ item.name }}">
+                    <span aria-hidden="true">
+                    {% if item.category == 'Laptops' %}💻
+                    {% elif item.category == 'Desktops' %}🖥️
+                    {% elif item.category == 'Components' %}⌨️
+                    {% else %}📦{% endif %}
+                    </span>
+                </a>
+                <div class="body">
+                    <div class="cat">{{ item.category }}</div>
+                    <h3 class="name"><a href="/item/{{ item.id }}">{{ item.name }}</a></h3>
+                    <div class="price">${{ '%.2f'|format(item.price) }}</div>
+                    {% if item.stock == 0 %}
+                        <span class="badge out">Out of stock</span>
+                    {% elif item.stock <= 3 %}
+                        <span class="badge low">Low stock · {{ item.stock }} left</span>
+                    {% else %}
+                        <span class="badge in">In stock</span>
+                    {% endif %}
+                    {% if item.stock > 0 %}
+                    <form action="/cart/add" method="post">
+                        <input type="hidden" name="item_id" value="{{ item.id }}">
+                        <button type="submit" class="btn accent block">Add to cart</button>
+                    </form>
+                    {% else %}
+                    <button class="btn block" disabled>Out of stock</button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endfor %}
+</div>
+{% endblock %}

@@ -10,6 +10,16 @@ def create_app(db_path=":memory:"):
 
     app.teardown_appcontext(close_db)
 
+    @app.context_processor
+    def inject_globals():
+        from flask import session
+        import datetime
+        cart = session.get("cart", {})
+        return {
+            "cart_count": sum(cart.values()) if cart else 0,
+            "year": datetime.date.today().year,
+        }
+
     # Blueprints registered as each module is implemented (TDD, one at a time)
     for modname, attr in [("categories", "bp"), ("items", "bp"),
                           ("customers", "bp"), ("orders", "bp"), ("web", "bp")]:

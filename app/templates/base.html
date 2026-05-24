@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CompuStore{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <a class="brand" href="/">⚡ CompuStore</a>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/cart" aria-label="Cart, {{ cart_count }} items">Cart <span class="cart-badge">{{ cart_count }}</span></a>
+        </nav>
+    </header>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="footer">
+        &copy; {{ year }} CompuStore — built on a local LLM. All rights reserved.
+    </footer>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Order Confirmed | CompuStore{% endblock %}
+{% block content %}
+<div class="confirmation">
+  <div class="checkmark">✅</div>
+  <h2>Order confirmed!</h2>
+  <p class="order-no">Order #{{ order_id }}</p>
+  <p class="order-total">Total paid: <strong>${{ '%.2f'|format(total) }}</strong></p>
+  <p class="muted">A confirmation has been sent to your email.</p>
+  <a href="/" class="btn accent">Continue shopping</a>
+</div>
+{% endblock %}

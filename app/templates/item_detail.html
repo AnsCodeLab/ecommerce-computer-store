@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ item.name }} | CompuStore{% endblock %}
+{% block content %}
+<p class="crumbs"><a href="/">← Back to store</a></p>
+<div class="detail">
+    <div class="detail-thumb" aria-hidden="true">
+        {% if item.category == 'Laptops' %}💻
+        {% elif item.category == 'Desktops' %}🖥️
+        {% elif item.category == 'Components' %}⌨️
+        {% else %}📦{% endif %}
+    </div>
+    <div class="detail-info">
+        <div class="cat">{{ item.category }}</div>
+        <h1>{{ item.name }}</h1>
+        <div class="price">${{ '%.2f'|format(item.price) }}</div>
+        <div class="stock">
+            {% if item.stock == 0 %}
+                <span class="badge out">Out of stock</span>
+            {% elif item.stock <= 3 %}
+                <span class="badge low">Low stock · {{ item.stock }} left</span>
+            {% else %}
+                <span class="badge in">In stock · {{ item.stock }} available</span>
+            {% endif %}
+        </div>
+        <p class="description">{{ item.description }}</p>
+        {% if item.stock > 0 %}
+        <form action="/cart/add" method="post">
+            <input type="hidden" name="item_id" value="{{ item.id }}">
+            <button type="submit" class="btn accent block">Add to cart</button>
+        </form>
+        {% else %}
+        <button class="btn block" disabled>Out of stock</button>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
