@@ -1,7 +1,43 @@
-from flask import Blueprint, render_template, redirect, url_for, request, abort
+import hmac
+from flask import (Blueprint, render_template, redirect, url_for, request, abort,
+                   session, current_app, flash)
 from app import get_db
 
 bp = Blueprint('admin', __name__, url_prefix='/admin')
+
+# Endpoints reachable without being logged in.
+_PUBLIC = {'admin.login'}
+
+
+@bp.before_request
+def require_login():
+    """Gate every admin route except the login page behind a session flag."""
+    if request.endpoint in _PUBLIC:
+        return None
+    if not session.get('admin_authenticated'):
+        return redirect(url_for('admin.login'))
+    return None
+
+
+@bp.route('/login', methods=('GET', 'POST'))
+def login():
+    if request.method == 'POST':
+        supplied = request.form.get('password', '')
+        expected = current_app.config['ADMIN_PASSWORD']
+        # constant-time comparison to avoid leaking length/contents via timing
+        if hmac.compare_digest(supplied, expected):
+            session['admin_authenticated'] = True
+            return redirect(url_for('admin.dashboard'))
+        flash('Incorrect password.')
+        return render_template('admin_login.html'), 401
+    return render_template('admin_login.html')
+
+
+@bp.route('/logout', methods=('GET', 'POST'))
+def logout():
+    session.pop('admin_authenticated', None)
+    return redirect(url_for('admin.login'))
+
 
 @bp.route('', methods=('GET',))
 def dashboard():

@@ -3,9 +3,11 @@ import sqlite3
 from .db import init_db, get_conn
 
 def create_app(db_path=":memory:"):
+    import os
     app = Flask(__name__)
     app.config["DB_PATH"] = db_path
-    app.secret_key = "dev"
+    app.secret_key = os.environ.get("SECRET_KEY", "dev")
+    app.config["ADMIN_PASSWORD"] = os.environ.get("ADMIN_PASSWORD", "admin")
     init_db(db_path)
 
     app.teardown_appcontext(close_db)

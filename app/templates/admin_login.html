@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login | CompuStore{% endblock %}
+
+{% block content %}
+<div class="login-card">
+  <h2>Admin Login</h2>
+  {% with msgs = get_flashed_messages() %}{% if msgs %}<div class="notice">{{ msgs[0] }}</div>{% endif %}{% endwith %}
+  <form method="POST" action="{{ url_for('admin.login') }}">
+    <label for="password">Password</label>
+    <input type="password" name="password" required autofocus>
+    <button type="submit" class="btn accent block">Log in</button>
+  </form>
+</div>
+{% endblock %}

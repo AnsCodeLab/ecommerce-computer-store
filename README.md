@@ -15,8 +15,9 @@ stylesheet (`app/static/css/style.css`, no external CDNs — works offline on a 
 - **Customers:** create / list / get / delete.
 - **Orders & checkout:** validates stock, creates an order with line items, decrements stock, computes totals.
 - **Web storefront:** browse items by category, item detail pages, session-based cart, and checkout that places a real order.
-- **Admin / stock management:** `/admin` page to edit stock & price inline, add products, and delete them — backed by a `PATCH /api/items/<id>` endpoint.
-- **SQLite** storage, **pytest** test suite (38 tests), TDD throughout.
+- **Admin / stock management:** password-gated `/admin` page to edit stock & price inline, add products, and delete them — backed by a `PATCH /api/items/<id>` endpoint.
+- **Admin auth:** session login at `/admin/login` (constant-time password check); set the password via the `ADMIN_PASSWORD` env var (and `SECRET_KEY` for the session cookie).
+- **SQLite** storage, **pytest** test suite (44 tests), TDD throughout.
 
 ## Layout
 
@@ -48,8 +49,12 @@ python run.py          # http://127.0.0.1:5005  (DB seeded with sample data)
 Expose on your LAN (reachable from other devices at `http://<your-ip>:5005`):
 
 ```bash
-HOST=0.0.0.0 python run.py     # HOST/PORT/DB_PATH are env-configurable
+HOST=0.0.0.0 ADMIN_PASSWORD=changeme SECRET_KEY=$(openssl rand -hex 16) python run.py
+# HOST/PORT/DB_PATH/ADMIN_PASSWORD/SECRET_KEY are env-configurable
 ```
+
+The admin area lives at `/admin` and is password-gated (defaults to `admin` if
+`ADMIN_PASSWORD` is unset — change it for any real use).
 
 ## Test
 

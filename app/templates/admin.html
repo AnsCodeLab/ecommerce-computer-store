@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Admin · Stock Management</h1>
+<div class="admin-header">
+  <h1>Admin · Stock Management</h1>
+  <a href="{{ url_for('admin.logout') }}" class="btn ghost">Log out</a>
+</div>
 <table class="table">
   <thead>
     <tr>
